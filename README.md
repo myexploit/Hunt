@@ -1,6 +1,6 @@
 # Hunt
 
-The research was conducted using the following account, this was to replicate minimum domain user privileges.
+This research was conducted using the following account, this was to replicate minimum domain user privileges.
 
 ```
 PS C:\Users\g.white> net user /domain g.white
@@ -36,13 +36,13 @@ PS C:\Users\g.white>
 ```
 
 
-Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.
+**Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.**
 
 ```
 Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
 ```
 
-Demo
+**Demo**
 
 ```
 PS C:\Users\g.white> Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
