@@ -35,6 +35,47 @@ The command completed successfully.
 PS C:\Users\g.white>
 ```
 
+**Local hosts netsetup log file**
+
+Review The Netsetup log file on the local host which contains information for helping to troubleshooting domain joining issue.
+The log file contains the host build information, the full domain name and domain controller’s host name. 
+
+```
+type C:\Windows\debug\NetSetup.LOG
+```
+
+**Demo**
+
+```
+PS C:\Users\g.white> type C:\Windows\debug\NetSetup.LOG
+04/15/1748 13:12:46:983 -----------------------------------------------------------------
+04/15/1748 13:12:46:983 NetpDoDomainJoin
+04/15/1748 13:12:46:983 NetpDoDomainJoin: using new computer names
+04/15/1748 13:12:46:983 NetpDoDomainJoin: NetpGetNewMachineName returned 0x0
+04/15/1748 13:12:46:983 NetpMachineValidToJoin: 'WIN-60SQ84GOA6K'
+04/15/1748 13:12:46:983         OS Version: 10.0
+04/15/1748 13:12:46:983         Build number: 19045 (19041.vb_release.191206-1406)
+04/15/1748 13:12:46:983         SKU: Windows 10 Enterprise Evaluation
+04/15/1748 13:12:46:983         Architecture: 64-bit (AMD64)
+04/15/1748 14:28:36:638 NetpDoDomainJoin
+04/15/1748 14:28:36:638 NetpDoDomainJoin: using new computer names
+04/15/1748 14:28:36:638 NetpDoDomainJoin: NetpGetNewMachineName returned 0x0
+04/15/1748 14:28:36:638 NetpDoDomainJoin: NetpGetNewHostName returned 0x0
+04/15/1748 14:28:36:638 NetpMachineValidToJoin: 'WIN-10-LAB'
+04/15/1748 14:28:36:638         OS Version: 10.0
+04/15/1748 14:28:36:638         Build number: 19045 (19041.vb_release.191206-1406)
+04/15/1748 14:28:36:638         SKU: Windows 10 Enterprise Evaluation
+04/15/1748 14:28:36:638         Architecture: 64-bit (AMD64)
+04/15/1748 14:28:36:654 NetpMachineValidToJoin: status: 0x0
+04/15/1748 14:28:36:654 NetpJoinDomain
+04/15/1748 14:28:36:654         HostName: Win-10-lab
+04/15/1748 14:28:36:654         NetbiosName: WIN-10-LAB
+04/15/1748 14:28:36:654         Domain: hacklab.local
+04/15/1748 14:28:36:654         MachineAccountOU: (NULL)
+04/15/1748 14:28:36:654         Account: hacklab.local\g.white
+04/15/1748 14:28:36:654         Options: 0x425
+
+```
 
 **Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.**
 
