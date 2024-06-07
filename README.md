@@ -170,6 +170,32 @@ Y:\hacklab.local>type C:\Users\g.white\Desktop\Results1.txt
                1 File(s)            824 bytes
 ```
 
+**Hunt for keywords within defined file formats using CMD**
+
+```
+findstr /si password *.bat *.xml *.ini *.txt > C:\Users\g.white\Desktop\findstr1.txt
+```
+
+**Demo**
+
+```
+Y:\hacklab.local>findstr /si password *.bat *.xml *.ini *.txt > C:\Users\g.white\Desktop\Output\findstr1.txt
+The system cannot find the path specified.
+
+Y:\hacklab.local>findstr /si password *.bat *.xml *.ini *.txt > C:\Users\g.white\Desktop\findstr1.txt
+
+Y:\hacklab.local>
+Y:\hacklab.local>
+Y:\hacklab.local>type C:\Users\g.white\Desktop\findstr1.txt
+scripts\Config.INI:password called Hello@1
+scripts\Pingy\Test.txt:This is a test as it contains a password called fishhead1scripts\Shares\Brandon_DiCam\Startup.bat:    [string]$Password = 'Passw0rd!'
+```
+
+**Same as above but highlight matched filenames in red**
+
+```
+findstr /A:4 /spin "passw" *.txt*
+```
 
 
 **Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.**
