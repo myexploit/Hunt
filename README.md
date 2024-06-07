@@ -1,6 +1,6 @@
 # Hunt
 
-**All tests were conducted using the following account, replicating minimum domain user privileges.**
+**All tests were conducted using the following account to help replicate minimum domain user privileges.**
 
 ```
 PS C:\Users\g.white> net user /domain g.white
