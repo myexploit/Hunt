@@ -137,6 +137,12 @@ PS Microsoft.PowerShell.Core\FileSystem::\\hacklab.local\SYSVOL\hacklab.local>
 **Search for file names, formats and locations on local or remote share, execute the command in CMD.**
 
 ```
+dir /s *.xml *.ini .*bat > C:\Users\g.white\Desktop\Results1.txt
+```
+
+**Demo**
+
+```
 Microsoft Windows [Version 10.0.19045.4291]
 (c) Microsoft Corporation. All rights reserved.
 
