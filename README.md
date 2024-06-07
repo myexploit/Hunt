@@ -77,6 +77,95 @@ PS C:\Users\g.white> type C:\Windows\debug\NetSetup.LOG
 
 ```
 
+**Local log file for Windows Malicious Software Removal Tool (Defender)**
+
+```
+type C:\Windows\debug\mrt.log
+```
+
+**Demo**
+
+```
+PS C:\Users\g.white> type C:\Windows\debug\mrt.log
+
+---------------------------------------------------------------------------------------
+Microsoft Windows Malicious Software Removal Tool v5.123, (build 5.123.24040.1001)
+Started On Wed Apr 17 15:42:27 1748
+
+Engine: 1.1.24020.9
+Signatures: 1.407.485.0
+MpGear: 1.1.16330.1
+Run Mode: Scan Run From Windows Update
+
+Results Summary:
+----------------
+No infection found.
+Successfully Submitted Heartbeat Report
+Microsoft Windows Malicious Software Removal Tool Finished On Wed Apr 17 15:45:13 1748
+```
+
+**Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents.**
+
+```
+content:"password“
+content:"cred"
+content:"password" AND *.txt
+content:"password" AND *.xls
+content:"password" AND *.bat
+content:"password" AND *.ini
+```
+
+**Combing Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents and file names.**
+
+```
+Groups.xml OR content:"password" OR password
+```
+
+**Mount a remote share**
+
+```
+pushd \\hacklab.local\SYSVOL\hacklab.local
+```
+
+**Demo**
+
+```
+PS C:\Users\g.white> pushd \\hacklab.local\SYSVOL\hacklab.local
+PS Microsoft.PowerShell.Core\FileSystem::\\hacklab.local\SYSVOL\hacklab.local>
+```
+
+**Search for file names, formats and locations on local or remote share, execute the command in CMD.**
+
+```
+Microsoft Windows [Version 10.0.19045.4291]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\g.white>pushd \\hacklab.local\SYSVOL\hacklab.local
+
+Y:\hacklab.local>dir /s *.xml *.ini .*bat > C:\Users\g.white\Desktop\Results1.txt
+
+Y:\hacklab.local>type C:\Users\g.white\Desktop\Results1.txt
+ Volume in drive Y has no label.
+ Volume Serial Number is A45A-D553
+
+ Directory of Y:\hacklab.local\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}
+
+15/04/2024  12:10                22 GPT.INI
+               1 File(s)             22 bytes
+
+ Directory of Y:\hacklab.local\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}
+
+08/05/2024  10:29                22 GPT.INI
+               1 File(s)             22 bytes
+
+ Directory of Y:\hacklab.local\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}\MACHINE
+
+12/04/2024  13:37               824 Groups.xml
+               1 File(s)            824 bytes
+```
+
+
+
 **Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.**
 
 ```
