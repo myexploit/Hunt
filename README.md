@@ -1,6 +1,6 @@
 # Hunt
 
-The research was conducted using the following account, which replicates minimum domain user privileges.
+The research was conducted using the following account, this was to replicate minimum domain user privileges.
 
 ```
 PS C:\Users\g.white> net user /domain g.white
