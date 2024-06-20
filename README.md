@@ -286,5 +286,120 @@ Match: \\WIN-10-LAB-2\Fox
 PS C:\Users\g.white>
 ```
 
+**VBA Script to be used with office documents to hunt for key words across a defined network share, tweak as required.**
 
+```
+Sub SearchKeywordInNetworkFiles()
+    Dim searchFolder As String
+    Dim textToFind As String
+    Dim fileExtensions As Variant
+    Dim resultMessage As String
+    Dim outputFilePath As String
+    
+    ' Add your keyword to search here.
+    textToFind = "password"
+    
+    ' Add the network share folder path to search here.
+    searchFolder = "\\hacklab.local\SYSVOL\hacklab.local\scripts"
+    
+    ' Add any extra file extensions to search here or keep the defaults below
+    fileExtensions = Array("*.docx", "*.bat", "*.txt", "*.ini", "*.xml")
+    
+    resultMessage = "Keyword '" & textToFind & "' found in the following files:" & vbCrLf & vbCrLf
+    
+    ' Add your output file path here.
+    outputFilePath = "C:\Users\g.white\Desktop\OutRun\Results.txt"
+    
+    Call RecursiveFileSearch(searchFolder, textToFind, fileExtensions, resultMessage)
+    
+    MsgBox resultMessage
+    
+    Call WriteResultsToFile(outputFilePath, resultMessage)
+End Sub
+
+Sub RecursiveFileSearch(folderPath As String, textToFind As String, fileExtensions As Variant, ByRef resultMessage As String)
+    Dim fso As Object
+    Dim folder As Object
+    Dim subFolder As Object
+    Dim file As Object
+    Dim filePath As String
+    Dim fileName As String
+    Dim fileContent As String
+    Dim doc As Object
+    Dim ts As Object
+    Dim i As Integer
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    On Error GoTo ErrorHandler
+    Set folder = fso.GetFolder(folderPath)
+    
+    For i = LBound(fileExtensions) To UBound(fileExtensions)
+        fileName = Dir(folderPath & "\" & fileExtensions(i))
+        
+        Debug.Print "Searching for files in: " & folderPath & "\" & fileExtensions(i)
+        
+        Do While fileName <> ""
+
+            filePath = folderPath & "\" & fileName
+            
+            Debug.Print "Processing file: " & filePath
+            
+            If fileExtensions(i) = "*.docx" Then
+
+                Set doc = GetObject(filePath)
+                
+                fileContent = doc.Content.Text
+                
+                doc.Close SaveChanges:=False
+            Else
+
+                Set file = fso.GetFile(filePath)
+                Set ts = file.OpenAsTextStream(1)
+                fileContent = ts.ReadAll
+                ts.Close
+            End If
+            
+
+            If InStr(1, fileContent, textToFind, vbTextCompare) > 0 Then
+
+                resultMessage = resultMessage & filePath & vbCrLf
+            End If
+            
+            fileName = Dir
+        Loop
+    Next i
+    
+    For Each subFolder In folder.SubFolders
+        Call RecursiveFileSearch(subFolder.Path, textToFind, fileExtensions, resultMessage)
+    Next subFolder
+    
+    Set folder = Nothing
+    Set fso = Nothing
+    Set file = Nothing
+    Set ts = Nothing
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Error: " & Err.Description & " in folder: " & folderPath
+    Resume Next
+End Sub
+
+Sub WriteResultsToFile(outputFilePath As String, resultMessage As String)
+    Dim fso As Object
+    Dim outputFile As Object
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Set outputFile = fso.CreateTextFile(outputFilePath, True)
+    
+    outputFile.WriteLine resultMessage
+    
+    outputFile.Close
+    
+    Set outputFile = Nothing
+    Set fso = Nothing
+End Sub
+
+```
 
