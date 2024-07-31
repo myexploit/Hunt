@@ -106,8 +106,11 @@ Microsoft Windows Malicious Software Removal Tool Finished On Wed Apr 17 15:45:1
 
 **Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents.**
 
+Note: Wrapping the search keyword in double quotes (") will only reveal exact matches. For example, searching for "pass" will match only the word "pass" and not "password" in a document. To find partial matches, wrap your search keyword in single quotes ('). For instance, searching for 'pass' will match words like "pass," "password," or "passw."
+
 ```
-content:"password“
+content:'pass'
+content:"password"
 content:"cred"
 content:"password" AND *.txt
 content:"password" AND *.xls
