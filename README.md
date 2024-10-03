@@ -124,6 +124,11 @@ content:"password" AND *.ini
 content:"\\"
 ```
 
+**Windows explorer search string to hunt for author name (person who saved the file metadata) of a document.  This is useful when you spot a user has stored credentials in a document, and you suspect they have a pattern of doing this, think IT engineers.**
+
+```
+author:"g.white"
+author:"Add domain name"
 
 **Combing Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents and file names.**
 
