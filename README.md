@@ -130,6 +130,7 @@ content:"\\"
 author:"g.white"
 author:"Add domain name"
 ```
+Or if the domain name is harry.pings you can just search for author:"harry"
 
 **Combing Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents and file names.**
 
