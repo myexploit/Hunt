@@ -110,11 +110,23 @@ Note: Wrapping the search keyword in double quotes (") will only reveal exact ma
 
 ```
 content:'pass'
+```
+```
 content:"password"
+```
+```
 content:"cred"
+```
+```
 content:"password" AND *.txt
+```
+```
 content:"password" AND *.xls
+```
+```
 content:"password" AND *.bat
+```
+```
 content:"password" AND *.ini
 ```
 
