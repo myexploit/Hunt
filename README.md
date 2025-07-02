@@ -138,7 +138,8 @@ Note OR is not as reliable in long chains, keep it short.
 
 ```
 Groups.xml OR content:"password" OR password
-
+```
+```
 *.bat OR *pass*.txt OR *.xml OR *.ini OR cred
 ```
 
