@@ -134,8 +134,12 @@ Or if the domain name is harry.pings you can just search for author:"harry"
 
 **Combing Windows explorer search strings, mount a share with windows explorer and use these in the search option to hunt for keywords within documents and file names.**
 
+Note OR is not as reliable in long chains, keep it short.
+
 ```
 Groups.xml OR content:"password" OR password
+
+*.bat OR *pass*.txt OR *.xml OR *.ini OR cred
 ```
 
 **Mount a remote share**
