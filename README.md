@@ -235,13 +235,13 @@ findstr /A:4 /spin "passw" *.txt*
 **Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across C:\ drive.**
 
 ```
-Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
+Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
 ```
 
 **Demo**
 
 ```
-PS C:\Users\g.white> Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
+PS C:\Users\g.white> Get-ChildItem -Path C:\ -Recurse -Include *.ini,*.txt,*.doc,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
 File: C:\Program Files\Common Files\microsoft shared\ink\Alphabet.xml
 Match:       <phrase>Du kan starte dit password med *.</phrase>
 File: C:\Program Files\VMware\VMware Tools\open_source_licenses.txt
@@ -269,10 +269,10 @@ Match: \\WIN-8HPLF8PSHC1\NETLOGON - Read access
 PS C:\Users\g.white>
 ```
 
-**Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across network share.**
+**Hunt for the keyword of password within the following documents formats *.ini,*.txt,*.doc,*.xml,*.config recursively across network share.**
 
 ```
-Get-ChildItem -Path \\hacklab.local\SYSVOL\hacklab.local -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
+Get-ChildItem -Path \\hacklab.local\SYSVOL\hacklab.local -Recurse -Include *.ini,*.txt,*.doc,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern 'password' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
 ```
 
 **Demo**
@@ -290,10 +290,10 @@ Match: Password:football
 PS C:\Users\g.white>
 ```
 
-**Hunt for UNC paths within the following documents formats *.ini,*.txt,*.doc,*.docx,*.xml,*.config recursively across network share.**
+**Hunt for UNC paths within the following documents formats *.ini,*.txt,*.doc,*.xml,*.config recursively across network share.**
 
 ```
-Get-ChildItem -Path \\hacklab.local\SYSVOL\hacklab.local -Recurse -Include *.ini,*.txt,*.doc,*.docx,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern '\\\\[a-zA-Z0-9_.-]+\\[a-zA-Z0-9$_.-]+' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
+Get-ChildItem -Path \\hacklab.local\SYSVOL\hacklab.local -Recurse -Include *.ini,*.txt,*.doc,*.xml,*.config -File -ErrorAction SilentlyContinue | ForEach-Object { Select-String -Pattern '\\\\[a-zA-Z0-9_.-]+\\[a-zA-Z0-9$_.-]+' -Path $_.FullName -ErrorAction SilentlyContinue } | ForEach-Object { Write-Output "File: $($_.Path)`nMatch: $($_.Line)" }
 ```
 
 **Demo**
@@ -311,6 +311,43 @@ Match: \\WIN-10-LAB\C$
 File: \\hacklab.local\SYSVOL\hacklab.local\scripts\Config.INI
 Match: \\WIN-10-LAB-2\Fox
 PS C:\Users\g.white>
+```
+
+**MS Office new file formats such as .xlsx and .docx require a different approach, the one liner below can deal with them and other standard formats**
+
+To use simply change the keyword of password in section $pattern='(?i)password'; and the network location in the following section Get-ChildItem "\\hacklab.local\NETLOGON\"
+
+```
+Add-Type -AssemblyName System.IO.Compression.FileSystem; $pattern='(?i)password'; Get-ChildItem "\\hacklab.local\NETLOGON\" -Recurse -File -Include *.bat,*.ini,*.txt,*.doc,*.docx,*.xml,*.config,*.xlsx -ErrorAction SilentlyContinue | ForEach-Object { $path=$_.FullName; switch -Regex ($_.Extension) { '^\.(bat|ini|txt|xml|config)$' { Select-String -Path $path -Pattern $pattern -ErrorAction SilentlyContinue | ForEach-Object { "File: $($_.Path)`nMatch: $($_.Line.Trim())`n" } } '^\.(docx|xlsx)$' { try { $fs=[IO.File]::OpenRead($path); $ms=New-Object IO.MemoryStream; $fs.CopyTo($ms); $fs.Close(); $ms.Position=0; $zip=[IO.Compression.ZipArchive]::new($ms); $zip.Entries | Where-Object { $_.FullName -match '^(word/document\.xml|xl/sharedStrings\.xml|xl/worksheets/.*\.xml)$' } | ForEach-Object { $entry=$_; $sr=$entry.Open(); $r=New-Object IO.StreamReader($sr); $c=$r.ReadToEnd(); $r.Close(); $sr.Close(); if($c -match $pattern){ "File: $path`nMatch in $($entry.FullName):"; ($c -split "`n"|Select-String -Pattern $pattern -SimpleMatch|ForEach-Object{"  $($_.Line.Trim())"});"" } }; $zip.Dispose(); $ms.Dispose() } catch { Write-Warning "Could not read $path : $_" } } default { } } }
+
+```
+
+**Demo**
+
+```
+PS C:\Users\g.white> Add-Type -AssemblyName System.IO.Compression.FileSystem; $pattern='(?i)password'; Get-ChildItem "\\hacklab.local\NETLOGON\" -Recurse -File -Include *.bat,*.ini,*.txt,*.doc,*.docx,*.xml,*.config,*.xlsx -ErrorAction SilentlyContinue | ForEach-Object { $path=$_.FullName; switch -Regex ($_.Extension) { '^\.(bat|ini|txt|xml|config)$' { Select-String -Path $path -Pattern $pattern -ErrorAction SilentlyContinue | ForEach-Object { "File: $($_.Path)`nMatch: $($_.Line.Trim())`n" } } '^\.(docx|xlsx)$' { try { $fs=[IO.File]::OpenRead($path); $ms=New-Object IO.MemoryStream; $fs.CopyTo($ms); $fs.Close(); $ms.Position=0; $zip=[IO.Compression.ZipArchive]::new($ms); $zip.Entries | Where-Object { $_.FullName -match '^(word/document\.xml|xl/sharedStrings\.xml|xl/worksheets/.*\.xml)$' } | ForEach-Object { $entry=$_; $sr=$entry.Open(); $r=New-Object IO.StreamReader($sr); $c=$r.ReadToEnd(); $r.Close(); $sr.Close(); if($c -match $pattern){ "File: $path`nMatch in $($entry.FullName):"; ($c -split "`n"|Select-String -Pattern $pattern -SimpleMatch|ForEach-Object{"  $($_.Line.Trim())"});"" } }; $zip.Dispose(); $ms.Dispose() } catch { Write-Warning "Could not read $path : $_" } } default { } } }
+
+File: \\hacklab.local\NETLOGON\Printers\Testmeup2\T2.docx
+Match in word/document.xml:
+
+File: \\hacklab.local\NETLOGON\Printers\Testmeup2\T3.docx
+Match in word/document.xml:
+
+File: \\hacklab.local\NETLOGON\Printers\T1.docx
+Match in word/document.xml:
+
+File: \\hacklab.local\NETLOGON\Printers\Yesone.xlsx
+Match in xl/sharedStrings.xml:
+
+File: \\hacklab.local\NETLOGON\config2.bat
+Match: password:Password1
+
+File: \\hacklab.local\NETLOGON\T4.docx
+Match in word/document.xml:
+
+File: \\hacklab.local\NETLOGON\Worklog.xlsx
+Match in xl/sharedStrings.xml:
+
 ```
 
 **VBA Script to be used with office documents to hunt for key words across a defined network share, tweak as required.**
